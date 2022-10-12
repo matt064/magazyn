@@ -1,3 +1,6 @@
+import csv
+
+
 user_choice = -1
 #lista produktów
 #items = ['Trimble_R2', 'Trimble_R8', 'Leica_ATX_1230', 'Leica_NA520',]
@@ -98,6 +101,49 @@ def show_revenue():
     bilans =  wartosc_sprzedazy - wartosc_magazynu
     print("Bilans (wartosc ze sprzedanych produktów - koszt ich zakupu) wynosi:", bilans,"[PLN]")
 
+def export_items_to_csv():
+    """exportuje stan magazynu do pliku"""
+    with open("stan_magazynu.csv",'w',newline='') as csvfile:
+        names = []
+        lista_typ = []
+        lista_quantity = []
+        lista_cena = []
+
+        for k, v in items_dict.items():
+            names.append(k)
+            lista_typ.append(v['type'])
+            lista_quantity.append(v['quantity'])
+            lista_cena.append(v['unit_price'])
+      
+    
+        csvwriter = csv.writer(csvfile)
+
+        for n in range(names.__len__()):
+            csvwriter.writerow([names[n], lista_typ[n], lista_quantity[n],lista_cena[n]])
+
+
+def export_sales_to_csv():
+    """eksportuje sprzedane produkty do pliku"""
+    with open("sprzedane_produkty.csv",'w',newline='') as csvfile:
+        names = []
+        lista_typ = []
+        lista_quantity = []
+        lista_cena = []
+
+        for k, v in sold_items.items():
+            names.append(k)
+            lista_typ.append(v['type'])
+            lista_quantity.append(v['quantity'])
+            lista_cena.append(v['unit_price'])
+      
+    
+        csvwriter = csv.writer(csvfile)
+
+        for n in range(names.__len__()):
+             csvwriter.writerow([names[n], lista_typ[n], lista_quantity[n],lista_cena[n]])
+
+
+
 
 
 
@@ -117,6 +163,10 @@ while True:
 
     if user_choice == "4":
         show_revenue()
+    
+    if user_choice == "5":
+        export_items_to_csv()
+        export_sales_to_csv()
         
     if user_choice == 'exit':
         print("Zamykam program, do widzenia.")
@@ -128,6 +178,7 @@ while True:
     print("2. Dodaj produkt do magazynu.")
     print("3. Sprzedaż towaru z magazynu.")
     print("4. Bilans zysków i kosztów")
+    print("5. Zapisz ")
 
 
     print("(możesz wyjsc z programu w każdym momencie, wpisując 'exit')")
