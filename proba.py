@@ -27,29 +27,16 @@ items_dict = {
 
 
 
-with open("stan_magazynu.csv",'w',) as csvfile:
-    fieldnames = []
-    lista_typ = []
-    lista_quantity = []
-    lista_cena = []
+with open("stan_magazynu.csv",'r') as csvfile:
+    items_dict.clear()
+    csvreader = csv.reader(csvfile, delimiter=",")
 
-    for k, v in items_dict.items():
-        fieldnames.append(k)
-        lista_typ.append(v['type'])
-        lista_quantity.append(v['quantity'])
-        lista_cena.append(v['unit_price'])
-      
+    for row in csvreader:
+        items_dict.setdefault(row[0],{'type':row[1], 'quantity':row[2], 'unit_price':row[3]})
+       
+
     
-    csvwriter = csv.writer(csvfile)
-
-    for n in range(fieldnames.__len__()):
-        csvwriter.writerow([fieldnames[n], lista_typ[n], lista_quantity[n],lista_cena[n]])
-
-
-    #print(fieldnames)
-    #print(lista_typ)
-    #print(lista_quantity)
-
+print(items_dict)
 
 
 

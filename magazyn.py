@@ -42,6 +42,7 @@ def get_items():
         else:
             print(nazwa + "\t" + info['type'] + "\t\t" + str(info["quantity"]) + "\t\t" + str(info["unit_price"]))
 
+
 def add_item():
     """dodaje nowy produkt do magazynu""" 
     new_item = input("Podaj nazwe produktu, ktory chcesz wprowadzic do bazy: ")
@@ -54,6 +55,7 @@ def add_item():
     print("Produkt wprowadzony")
     return items_dict
 
+
 def sell_item():  # dodac blad gdy wprowadzi sie wartosc inna niz w zbiorze
     "usuwa produkt z listy"
     delete_item = input("Wprowadź nazwe produktu, ktory chcesz sprzedac: ")
@@ -63,6 +65,7 @@ def sell_item():  # dodac blad gdy wprowadzi sie wartosc inna niz w zbiorze
         items_dict[delete_item]['quantity'] = items_dict[delete_item]['quantity'] - piece_of_product
         if items_dict[delete_item]['quantity'] == 0:
             del items_dict[delete_item]
+            print("Produkt wyprzedany. Zostaje usuniety z listy.")
         elif items_dict[delete_item]['quantity'] < 0:
             print("Wprowadzona ilość sztuk do sprzedazy jest wieksza niz posiadana w magazynie! Operacja nieudana.")
         else:
@@ -70,6 +73,7 @@ def sell_item():  # dodac blad gdy wprowadzi sie wartosc inna niz w zbiorze
             sold_items[delete_item]['quantity'] = piece_of_product
 
     return items_dict, sold_items
+
 
 def get_costs():
     """zlicza wartosc przedmiotow w magazynie"""
@@ -81,6 +85,7 @@ def get_costs():
     return calkowita_wartosc
     #print("Wartosc produktów w magazynie wynosci:", calkowita_wartosc)
 
+
 def get_income():
     """zlicza wartosc sprzedanych produktow"""
     lista_sprzedazy = []
@@ -91,7 +96,9 @@ def get_income():
     return suma_sprzedaz
     #print("Zysk ze sprzedazy wynosci:", suma_sprzedaz)
 
+
 def show_revenue():
+    """przedstawia bilans """
     wartosc_magazynu = get_costs()
     wartosc_sprzedazy = get_income()
 
@@ -100,6 +107,7 @@ def show_revenue():
 
     bilans =  wartosc_sprzedazy - wartosc_magazynu
     print("Bilans (wartosc ze sprzedanych produktów - koszt ich zakupu) wynosi:", bilans,"[PLN]")
+
 
 def export_items_to_csv():
     """exportuje stan magazynu do pliku"""
@@ -143,6 +151,19 @@ def export_sales_to_csv():
              csvwriter.writerow([names[n], lista_typ[n], lista_quantity[n],lista_cena[n]])
 
 
+def load_items_from_csv():
+    """import danych z pliku"""
+    try:
+        with open("stan_magazynu.csv",'r') as csvfile:
+            items_dict.clear()
+            csvreader = csv.reader(csvfile, delimiter=",")
+
+            for row in csvreader:
+                items_dict.setdefault(row[0],{'type':row[1], 'quantity':int(row[2]), 'unit_price':int(row[3])})
+    
+        print("Import danych zakonczony sukcesem")
+    except FileNotFoundError:
+        return
 
 
 
@@ -150,6 +171,8 @@ def export_sales_to_csv():
 print()
 print("Witaj! Oto program do obslugi twojego magazynu.")
 print()
+
+load_items_from_csv()
 
 while True:
     if user_choice == "1":
@@ -167,7 +190,10 @@ while True:
     if user_choice == "5":
         export_items_to_csv()
         export_sales_to_csv()
-        
+    
+    if user_choice == "6":
+        load_items_from_csv()
+
     if user_choice == 'exit':
         print("Zamykam program, do widzenia.")
         break
@@ -179,6 +205,7 @@ while True:
     print("3. Sprzedaż towaru z magazynu.")
     print("4. Bilans zysków i kosztów")
     print("5. Zapisz ")
+    print("6. Import danych z pliku")
 
 
     print("(możesz wyjsc z programu w każdym momencie, wpisując 'exit')")
